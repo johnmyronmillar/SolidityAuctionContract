@@ -34,18 +34,19 @@ contract SimpleAuction {
     /// seconds bidding time on behalf of the
     /// beneficiary address `_beneficiary`.
     constructor(
-        uint _biddingTime,
+        /// uint _biddingTime,
         address payable _beneficiary
     ) public {
         beneficiary = _beneficiary;
-        auctionEndTime = now + _biddingTime;
+        auctionEndTime = now; /// + _biddingTime;
+        ended; 
     }
 
     /// Bid on the auction with the value sent
     /// together with this transaction.
     /// The value will only be refunded if the
     /// auction is not won.
-    function bid() public payable {
+    function bid(address payable sender) public payable {
         // No arguments are necessary, all
         // information is already part of
         // the transaction. The keyword payable
@@ -112,7 +113,10 @@ contract SimpleAuction {
         // If functions called internally include interaction with external
         // contracts, they also have to be considered interaction with
         // external contracts.
-
+        
+        // Add a require in auctionEnd that only allows the beneficiary to end the auction
+        require(msg.sender == beneficiary, "Not allowed to end auction");
+        
         // 1. Conditions
         require(now >= auctionEndTime, "Auction not yet ended.");
         require(!ended, "auctionEnd has already been called.");

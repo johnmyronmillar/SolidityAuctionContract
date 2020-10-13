@@ -23,32 +23,46 @@ contract MartianMarket is ERC721, Ownable {
 
     function createAuction(uint tokenId) public onlyOwner {
         // your code here...
+        auctions[token_id] = new
+        MartianAuction(foundation_address);
     }
 
     function endAuction(uint tokenId) public onlyOwner {
         require(_exists(tokenId), "Land not registered!");
         MartianAuction auction = getAuction(tokenId);
         // your code here...
+        safeTransferFrom(owner(), auction.highestBidder(), token_id);
     }
 
     function getAuction(uint tokenId) public view returns(MartianAuction auction) {
         // your code here...
+        auction = Auctions[id];
+        highestBid = auction.highestBid;
+        highestBidder = auction.highestBidder;
     }
 
     function auctionEnded(uint tokenId) public view returns(bool) {
         // your code here...
+        MartianAuction auction = auctions[token_id];
+        return auction.ended();
     }
 
     function highestBid(uint tokenId) public view returns(uint) {
         // your code here...
+        MartianAuction auction = auctions[token_id];
+        return auction.highestBid();
     }
 
     function pendingReturn(uint tokenId, address sender) public view returns(uint) {
         // your code here...
+        MartianAuction auction = auctions[token_id];
+        return auction.pendingReturn(sender);
     }
 
     function bid(uint tokenId) public payable {
         // your code here...
+        MartianAuction auction = auctions[token_id];
+        auction.bid.value(msg.value)(msg.sender);
     }
 
 }
